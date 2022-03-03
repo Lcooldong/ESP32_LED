@@ -4,7 +4,7 @@
 #error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
 #endif
 
-#define LED_PIN 15
+#define LED_PIN 15  // For Test
 #define LED 22
 #define batteryPin 34
 

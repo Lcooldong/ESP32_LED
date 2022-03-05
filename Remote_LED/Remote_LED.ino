@@ -9,6 +9,7 @@
 #define batteryPin 34
 
 String message = "";
+String command = "";
 char incomingChar;
 
 int sensorValue = 0;
@@ -19,7 +20,7 @@ int bat_percentage;
 int blink_switch = 0;
 int ledState = LOW;
 unsigned long previousMillis = 0;
-const long interval = 1000;
+long interval = 1000; // 변경 가능해야함
 unsigned long previousMillis2 = 0;
 const long interval2 = 2000;
 
@@ -55,6 +56,24 @@ void loop() {
     Serial.write(incomingChar);  // 받은 것 계속 쓰기
   }
   // Check received message and control output accordingly
+  int secondIndex1 = message.indexOf('!');
+  int secondIndex2 = message.indexOf('s');  // s 전까지는 -1
+  int size_of_message = message.length();   // 문자열 끝은 \0까지 있음
+
+  command = message.substring(0, secondIndex1);
+  int _time = message.substring(secondIndex1+1, secondIndex2).toInt();
+//  delay(500);
+  if ((_time != 0) && (secondIndex2 == size_of_message-1)){
+    interval = _time;
+  }
+
+//  Serial.print("s 찾기 : ");
+//  Serial.println(secondIndex2);
+//  Serial.print("전체길이 : ");
+//  Serial.println(size_of_message);
+//  Serial.print("간격 : ");
+//  Serial.println(interval);
+  
   if (message =="led_on"){
     digitalWrite(LED, HIGH);
     //Serial.println("Turn ON");
@@ -62,7 +81,7 @@ void loop() {
   else if (message =="led_off"){
     digitalWrite(LED, LOW);
     //Serial.println("Turn OFF");
-  }else if (message == "blink_on"){
+  }else if (command == "blink_on"){
     blink_switch = 1;
   }else if (message == "blink_off"){
     digitalWrite(LED, LOW);
